@@ -2,7 +2,8 @@
 {
   "compilerOptions": {
     "target"    : "ES5"       , // Especificação do ECMAScript utilizada
-    "rootDir"   : "src"      , // Path raiz contendo arquivos .ts
+    "module"    : "AMD"       , // default é CommonJS
+    "rootDir"   : "src"       , // Path raiz contendo arquivos .ts
     "outDir"    : "public/js" , // Path com saída transpilada do arquivo .js
     "sourceMap" : true
   },

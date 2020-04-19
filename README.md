@@ -199,6 +199,7 @@ tsc --project tsconfig.production.json
                 this.listeners[eventName] = [];
             }
             
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
             for(let callable of this.listeners[eventName]){
                 callable();
             }
@@ -230,6 +231,7 @@ tsc --project tsconfig.production.json
 
 
 ## AULA 09 - Declare e use tipos 
+- Referencia : https://www.typescriptlang.org/docs/handbook/interfaces.html
 - Criação de interfaces como tipos para EventManager.
 - Criando consistencia e segurança de código com interfaces Listerners e ListenerInterface
 - Uso do padrão Indexable Types, ex: { [indice:string]: Array<InterfaceAny> }
@@ -303,6 +305,55 @@ tsc --project tsconfig.production.json
 
     new PostsPage( new EventManager() );
     ```
+
+
+
+## AULA 11 - Organização de módulos
+- Sistema de Carregamento de Módulos
+- Utilização do 'AMD' - Asynchronous module definition - https://en.wikipedia.org/wiki/Asynchronous_module_definition
+- Melhoria de Performe e Reuso de código, tal como desacomplamento do sistema.
+- Módulos (https://www.typescriptlang.org/docs/handbook/modules.html) são importados ou exportados pelas palavras reservadas 'export' ou 'import'.
+
+- Passos para implementação completa do sistema de módulos:
+    1. Nomeação Kebeb para arquivos separados como módulo. ex: 
+    'event-manager.ts'
+    2. Refatorar todo typeScript para exportar e importar classes dependentes. 
+        ```
+        export default EventManager {};
+        ``` 
+        ou 
+        ```
+        import  EventManager from './src/event-manager';
+        ```
+    3. Se for uma uníca classe do módulo a ser exportada usa-se ```export default className```;
+    4. Resolver erro gerado por falta da lib require e falha do modulo 'exports not defined'. Por default o ```tsconfig.json``` define o ```CommonJS``` como gerenciandor de módulos, deve-se alterar para ```AMD``` :
+        ```
+        /** documentacao: https://www.typescriptlang.org/docs/handbook/compiler-options.html */
+        {
+            "compilerOptions": {
+                "target"    : "ES5"       , // Especificação do ECMAScript utilizada
+                "module"    : "AMD"       , // default é CommonJS
+                "rootDir"   : "src"       , // Path raiz contendo arquivos .ts
+                "outDir"    : "public/js" , // Path com saída transpilada do arquivo .js
+                "sourceMap" : true
+            },
+            "files": [
+                "src/posts.ts"
+            ]
+        }
+
+        ```
+    5. A compilação do código agora usará o módulo ```define``` para carregamento por ordem do array. E precisará do módulo/lib ```requireJS```
+
+-  
+
+
+
+
+
+
+
+
 
 
 
