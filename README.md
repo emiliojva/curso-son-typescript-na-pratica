@@ -227,13 +227,82 @@ tsc --project tsconfig.production.json
             this.eventManager.runEvent('box-post-form-click-hidden');
     ```
 
+
+
+## AULA 09 - Declare e use tipos 
+- Criação de interfaces como tipos para EventManager.
+- Criando consistencia e segurança de código com interfaces Listerners e ListenerInterface
+- Uso do padrão Indexable Types, ex: { [indice:string]: Array<InterfaceAny> }
+    ```
+    interface ListenerInterface {
+        ():void;
+    }
+
+    interface Listeners {
+        [eventName: string]: Array<ListenerInterface> 
+    }
+
+    class EventManager {
+        
+        /**
+        * Indexable Types
+        * - Representacao shortHand de um objeto específico(iteravel), com indice associativo(eventName:string) definido.
+        * Neste indice comporta SOMENTE, um array com itens do tipo ListernerInterface
+        * 
+        * Qualquer outra representacao de objeto gera um erro
+        * 
+        */
+        private listenersShortHand: { [eventName: string]: Array<ListenerInterface> } = {}; // representacao shortHand de um Indexable Types
+        private listeners: Listeners = {};
+
+        ...
+    }
+
+    ```
+- Criar variaveis para guardar os tokens do eventos
+    ```
+    class BoxPostList {
+        static boxTokenId:string = 'box-post-list';
+        static buttonToken:string = 'box-post-list>button[type=button]';
+        static EVENT_CLICK_HIDDEN_BOX_LIST = 'box-post-list-click-hidden';
+
+        constructor(private eventManager: EventManager){
+
+            // executar evento ja registrado
+            this.eventManager.runEvent(BoxPostList.EVENT_CLICK_HIDDEN_BOX_LIST);
+
+        }
+    }
+
     
+    ```
 
 
 
+## AULA 10 - Organização dos scripts em conceitos de páginas
+- Controllers - Separação do arranque de um sistema dentro de uma classe responsavel
 
+    ```
+    /**
+    * Organização dos scripts em conceitos de páginas
+    */
+    class PostsPage {
+        
+        constructor(private eventManager: EventManager)
+        {
+            this.init();
+        }
 
+        private init()
+        {
+            new BoxPostForm(this.eventManager);
+            new BoxPostList(this.eventManager);
+        }
 
+    }
+
+    new PostsPage( new EventManager() );
+    ```
 
 
 

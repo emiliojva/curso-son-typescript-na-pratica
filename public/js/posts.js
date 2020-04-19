@@ -1,20 +1,24 @@
 /**
  * Arquivo de manipulacao DOM
  */
-// HTMLDivElementDom boxForm
-// const buttonForm = document.querySelector('#box-post-form>button[type=button]');
-// const boxForm = document.getElementById('box-post-form');
-//const boxList = document.getElementById('box-post-list');
-//const buttonFormList = document.querySelector('#box-post-list>button[type=button]');
 /**
  * Conceito de orientação a eventos(listeners)
  */
 var EventManager = /** @class */ (function () {
     function EventManager() {
+        /**
+         * Indexable Types
+         * - Representacao shortHand de um objeto específico(iteravel), com indice associativo(eventName:string) definido.
+         * Neste indice comporta SOMENTE, um array com itens do tipo ListernerInterface
+         *
+         * Qualquer outra representacao de objeto gera um erro
+         *
+         */
+        this.listenersShortHand = {}; // representacao shortHand de um Indexable Types
         this.listeners = {};
     }
     /**
-     * Adiciona funcoes/procedures para cada ouvinte
+     * Empilha funcoes/procedures para cada ouvinte
      * @param eventName
      * @param callable
      */
@@ -34,6 +38,10 @@ var EventManager = /** @class */ (function () {
         }
         this.listeners[eventName].push(callable);
     };
+    /**
+     * Executa evento nomeado
+     * @param eventName
+     */
     EventManager.prototype.runEvent = function (eventName) {
         // console.log(this.listeners[eventName])
         if (!(this.listeners[eventName] instanceof Array)) {
@@ -59,11 +67,13 @@ var BoxPostList = /** @class */ (function () {
         BoxPostList.button.addEventListener('click', function () {
             // ocultar listagem
             _this.hiddenBox();
+            // executar evento ja registrado
+            _this.eventManager.runEvent(BoxPostList.EVENT_CLICK_HIDDEN_BOX_LIST);
             // chamar box form
-            BoxPostForm.box.removeAttribute('style');
+            //BoxPostForm.box.removeAttribute('style');
         });
         // Ouvinte - Quando formulario for ocultado
-        this.eventManager.addListener('box-post-form-click-hidden', function () {
+        this.eventManager.addListener(BoxPostForm.EVENT_CLICK_HIDDEN_BOX_FORM, function () {
             // mostro a listagem
             _this.showBox();
         });
@@ -78,6 +88,7 @@ var BoxPostList = /** @class */ (function () {
     };
     BoxPostList.boxTokenId = 'box-post-list';
     BoxPostList.buttonToken = 'box-post-list>button[type=button]';
+    BoxPostList.EVENT_CLICK_HIDDEN_BOX_LIST = 'box-post-list-click-hidden';
     // Div Form 
     BoxPostList.box = document.getElementById(BoxPostList.boxTokenId); // assercao ou cast
     BoxPostList.button = document.querySelector("#" + BoxPostList.buttonToken); // Botao Listar meus posts
@@ -97,10 +108,10 @@ var BoxPostForm = /** @class */ (function () {
             // ocultar o formulario
             _this.hiddenBox();
             // disparar evento quando o formulario ocultar - exibir box list
-            _this.eventManager.runEvent('box-post-form-click-hidden');
+            _this.eventManager.runEvent(BoxPostForm.EVENT_CLICK_HIDDEN_BOX_FORM);
         });
         // Ouvinte - Quando listagem for ocultada
-        this.eventManager.addListener('box-post-list-click-hidden', function () {
+        this.eventManager.addListener(BoxPostList.EVENT_CLICK_HIDDEN_BOX_LIST, function () {
             // mostro formulario
             _this.showBox();
         });
@@ -116,11 +127,24 @@ var BoxPostForm = /** @class */ (function () {
     // private boxList: BoxPostList;
     BoxPostForm.boxTokenId = 'box-post-form';
     BoxPostForm.buttonToken = 'box-post-form>button[type=button]';
+    BoxPostForm.EVENT_CLICK_HIDDEN_BOX_FORM = 'box-post-form-click-hidden';
     BoxPostForm.box = document.getElementById(BoxPostForm.boxTokenId); // Div Form 
     BoxPostForm.button = document.querySelector("#" + BoxPostForm.buttonToken); // Botao Listar meus posts
     return BoxPostForm;
 }());
-var eventManager = new EventManager();
-new BoxPostForm(eventManager);
-new BoxPostList(eventManager);
+/**
+ * Organização dos scripts em conceitos de páginas
+ */
+var PostsPage = /** @class */ (function () {
+    function PostsPage(eventManager) {
+        this.eventManager = eventManager;
+        this.init();
+    }
+    PostsPage.prototype.init = function () {
+        new BoxPostForm(this.eventManager);
+        new BoxPostList(this.eventManager);
+    };
+    return PostsPage;
+}());
+new PostsPage(new EventManager());
 //# sourceMappingURL=posts.js.map
