@@ -6,20 +6,66 @@
 // const boxForm = document.getElementById('box-post-form');
 //const boxList = document.getElementById('box-post-list');
 //const buttonFormList = document.querySelector('#box-post-list>button[type=button]');
+/**
+ * Conceito de orientação a eventos(listeners)
+ */
+var EventManager = /** @class */ (function () {
+    function EventManager() {
+        this.listeners = {};
+    }
+    /**
+     * Adiciona funcoes/procedures para cada ouvinte
+     * @param eventName
+     * @param callable
+     */
+    EventManager.prototype.addListener = function (eventName, callable) {
+        /**
+         * Representacao de um listener
+         * Cada posicao associativa/token do objeto recebe um array de funcoes
+         * this.listerners['cantar'] = [func1,func2,func3];
+         * ex:  {
+         *          'mostrar'=>function(){
+         *              mostrarAlgo()
+         *          }
+         *      }
+         */
+        if (!(this.listeners[eventName] instanceof Array)) {
+            this.listeners[eventName] = [];
+        }
+        this.listeners[eventName].push(callable);
+    };
+    EventManager.prototype.runEvent = function (eventName) {
+        // console.log(this.listeners[eventName])
+        if (!(this.listeners[eventName] instanceof Array)) {
+            this.listeners[eventName] = [];
+        }
+        for (var _i = 0, _a = this.listeners[eventName]; _i < _a.length; _i++) {
+            var callable = _a[_i];
+            callable();
+        }
+    };
+    return EventManager;
+}());
 var BoxPostList = /** @class */ (function () {
-    function BoxPostList() {
+    function BoxPostList(eventManager) {
+        this.eventManager = eventManager;
         this.init();
     }
     BoxPostList.prototype.init = function () {
         var _this = this;
         /**
-         * Ouvir evento de click do button 'novo'
+         * Ouvinte do evento de click do button 'novo'
          */
         BoxPostList.button.addEventListener('click', function () {
             // ocultar listagem
             _this.hiddenBox();
             // chamar box form
             BoxPostForm.box.removeAttribute('style');
+        });
+        // Ouvinte - Quando formulario for ocultado
+        this.eventManager.addListener('box-post-form-click-hidden', function () {
+            // mostro a listagem
+            _this.showBox();
         });
     };
     BoxPostList.prototype.hiddenBox = function () {
@@ -38,19 +84,25 @@ var BoxPostList = /** @class */ (function () {
     return BoxPostList;
 }());
 var BoxPostForm = /** @class */ (function () {
-    function BoxPostForm() {
+    function BoxPostForm(eventManager) {
+        this.eventManager = eventManager;
         this.init();
     }
     BoxPostForm.prototype.init = function () {
-        /**
-         * Ouvir evento de click do button 'listar meus posts'
-         */
         var _this = this;
+        /**
+         * Ouvinte evento de click do button 'listar meus posts'
+         */
         BoxPostForm.button.addEventListener('click', function () {
+            // ocultar o formulario
             _this.hiddenBox();
-            // chamar box list
-            BoxPostList.box.removeAttribute('style');
-            // document.getElementById(BoxPostList.boxTokenId).removeAttribute('style');
+            // disparar evento quando o formulario ocultar - exibir box list
+            _this.eventManager.runEvent('box-post-form-click-hidden');
+        });
+        // Ouvinte - Quando listagem for ocultada
+        this.eventManager.addListener('box-post-list-click-hidden', function () {
+            // mostro formulario
+            _this.showBox();
         });
     };
     BoxPostForm.prototype.hiddenBox = function () {
@@ -68,5 +120,7 @@ var BoxPostForm = /** @class */ (function () {
     BoxPostForm.button = document.querySelector("#" + BoxPostForm.buttonToken); // Botao Listar meus posts
     return BoxPostForm;
 }());
-new BoxPostForm();
-new BoxPostList();
+var eventManager = new EventManager();
+new BoxPostForm(eventManager);
+new BoxPostList(eventManager);
+//# sourceMappingURL=posts.js.map

@@ -149,6 +149,86 @@ tsc --project tsconfig.production.json
     ```
 
 
+## AULA 07 - SourceMaps
+- Poder trabalhar com typescript no debug do browser.
+- Informa para o browser os arquivos que precisam ser mapeados para visualização: ``` ./node_modules/.bin/tsc --sourceMap  ```
+- Não funcionou com lite-serve
+
+
+## AULA 08 - Desacoplamento com orientação a eventos
+- Orientação a eventos
+- Indepency - Construir comunicação entre duas classes sem que elas se conheçam
+- Pattern de orientacao a eventos:
+
+    ```
+    /**
+    * Conceito de orientação a eventos(listeners)
+    */
+    class EventManager {
+
+        private listeners = {};
+
+        /**
+        * Adiciona funcoes/procedures para cada ouvinte
+        * @param eventName 
+        * @param callable 
+        */
+        addListener(eventName: string, callable: ()=>void )
+        {
+            /**
+            * Representacao de um listener
+            * Cada posicao associativa/token do objeto recebe um array de funcoes
+            * this.listerners['cantar'] = [func1,func2,func3]; 
+            * ex:  {
+            *          'mostrar'=>function(){ 
+            *              mostrarAlgo() 
+            *          } 
+            *      }
+            */
+            if( !(this.listeners[eventName] instanceof Array) ){
+                this.listeners[eventName] = [];
+            }
+            
+            this.listeners[eventName].push(callable);
+        }
+
+        runEvent(eventName: string)
+        {
+            // console.log(this.listeners[eventName])
+            if( !(this.listeners[eventName] instanceof Array) ){
+                this.listeners[eventName] = [];
+            }
+            
+            for(let callable of this.listeners[eventName]){
+                callable();
+            }
+        }
+
+    }
+
+    
+    ```
+
+- Declaração para chamar dentro de classes distintas
+    
+    Na classe que ocorre o evento adiciona o ouvinte
+    ```
+        // Ouvinte - Quando formulario for ocultado
+            this.eventManager.addListener('box-post-form-click-hidden',()=>{
+                // mostro a listagem
+                this.showBox();
+            });
+    ```
+    
+    
+    Na classe que quero disparar o evento criado acima
+    ```
+        // disparar evento quando o formulario ocultar - exibir box list
+            this.eventManager.runEvent('box-post-form-click-hidden');
+    ```
+
+    
+
 
 
 
