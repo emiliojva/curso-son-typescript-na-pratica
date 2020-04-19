@@ -122,8 +122,39 @@ tsc --project tsconfig.production.json
 --- 
 
 
-## AULA 05 - 
-- 
+## AULA 05 - Modele Tipos de Classes
+- Será que o metodo precisa ser chamado fora da classe? Senao use o modificador ```private```
+    ```
+    const buttonForm = document.querySelector('#box-post-form>button[type=button]');
+    const boxForm = document.getElementById('box-post-form');
+    const boxList = document.getElementById('box-post-list');
+    const buttonFormList = document.querySelector('#box-post-list>button[type=button]');
+    ```
+
+
+## AULA 06 - Crie Variaveis
+- Criação de variaveis ou propriedades estáticas para uso sem que precise instanciar a classe
+    ```
+    class BoxPostForm {
+
+        // private boxList: BoxPostList;
+        static boxTokenId:string = 'box-post-form';
+        static buttonToken:string = 'box-post-form>button[type=button]';
+
+        static box: HTMLDivElement = (<HTMLDivElement> document.getElementById(BoxPostForm.boxTokenId) );  // Div Form 
+        static button: HTMLButtonElement = document.querySelector(`#${BoxPostForm.buttonToken}`); // Botao Listar meus posts
+
+        constructor() {}
+    }
+    ```
+
+
+
+
+
+
+
+
 
 
 ## FERRAMENTAS
