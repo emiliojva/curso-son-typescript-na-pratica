@@ -1,0 +1,22 @@
+{
+  "name": "emiliojva.typescript",
+  "version": "1.0.0",
+  "description": "Cursos SON - TypeScript na pratica",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "lite-server": "^2.5.4",
+    "live-server": "^1.2.1",
+    "typescript": "^2.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "lite-server"
+  },
+  "keywords": [
+    "cursos",
+    "son"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,11 @@
+/** documentacao: https://www.typescriptlang.org/docs/handbook/compiler-options.html */
+{
+  "compilerOptions": {
+    "target"  : "ES5"       , // Especificação do ECMAScript utilizada
+    "rootDir" : "src/"      , // Path raiz contendo arquivos .ts
+    "outDir"  : "public/js" , // Path com saída transpilada do arquivo .js
+  },
+  "files": [
+    "src/posts.ts"
+  ]
+}
