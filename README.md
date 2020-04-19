@@ -82,27 +82,63 @@ e a estruturação desta tecnologia dentro de projetos WEB.
 tsc --project tsconfig.production.json
 
 
-### snnipets: 
-- compilar e executar: tsc --outDir ./out 04-tipos-basicos.ts && node out\04-tipos-basicos.js
+
 
 
 
 ---
 
-## AULA 03 - Assim não precisa usar o TypeScript
+
+## AULA 03 - Como configurar compilação do typescript
+- criar tsconfig.json na raiz do projeto:
+    ```
+        {
+            "compilerOptions": {
+                "target"  : "ES5"       , // Especificação do ECMAScript utilizada
+                "rootDir" : "src/"      , // Path raiz contendo arquivos .ts
+                "outDir"  : "public/js" , // Path com saída transpilada do arquivo .js
+            },
+            "files": [
+                "src/posts.ts"
+            ]
+        }
+    ```
+
+- Transpilar com watch:   
+    ```
+    ./node_modules/.bin/tsc -w 
+    ```
+
+
+## AULA 04 - Assim não precisa usar o TypeScript
 
 - HTML SOLTO PUXANDO JS EXPORTADO PELO TSC
 - CAPTURA DE EVENTOS CLICK PARA LINKAR OS BLOCOS(DIVS): LIST E FORM
+- REPETIÇÃO DE CAPTURA DE ELEMENTOS DOM ESPALHADOS
+- DEIXAR DE USAR VARIAVEIS, E REPETIR NOMES PELO CODIGO
+- NAO USAR TOKENS 'elemento-x-to-y'
 
 
 --- 
 
 
+## AULA 05 - 
+- 
+
+
 ## FERRAMENTAS
 
 ### lite-server
-- instalacao: npm i -g live-server
-- uso no cli:
+- instalacao: ```npm i -g live-server```
+- configuração: ```Criar um arquivo bs-config.json``` e incluir: 
+    ```
+    {
+        "port": 8000,
+        "files": ["./public/**/*.{html,htm,css,js}"],
+        "server": { "baseDir": "./public" }
+    }
+    ```
+- usando como dev --save-dev no cli >   ```./node_modules/.bin/live-server``` na raiz (onde encontra-se o arquivo bs-config.json)
 - descricao : O servidor de nó de desenvolvimento leve que serve um aplicativo da Web, abre-o no navegador, atualiza quando o html ou o javascript são alterados, injeta alterações de CSS usando soquetes e possui uma página de fallback quando uma rota não é encontrada.
 - referencia: https://www.npmjs.com/package/lite-server
 
