@@ -125,10 +125,11 @@ tsc --project tsconfig.production.json
 ## AULA 05 - Modele Tipos de Classes
 - Será que o metodo precisa ser chamado fora da classe? Senao use o modificador ```private```
     ```
-    const buttonForm = document.querySelector('#box-post-form>button[type=button]');
-    const boxForm = document.getElementById('box-post-form');
-    const boxList = document.getElementById('box-post-list');
-    const buttonFormList = document.querySelector('#box-post-list>button[type=button]');
+    class BoxPostForm {
+        private boxList: BoxPostList;
+        static boxTokenId:string = 'box-post-form';
+        ...
+    }
     ```
 
 
@@ -345,15 +346,42 @@ tsc --project tsconfig.production.json
         ```
     5. A compilação do código agora usará o módulo ```define``` para carregamento por ordem do array. E precisará do módulo/lib ```requireJS```
 
--  
+    6. Utilizando CDN cdnjs : https://cdnjs.com/libraries/require.js
+
+   
 
 
 
+## AULA 12 - instalação e uso do requireJS
 
+1. Instalação e uso do requireJS(requirejs.org):
+2. Colocar script no topo do carregamento da tag script ou antes das classes typescript do projeto
+    ```
+    <!-- Carregamento no módulo requireJS -->
+    <script data-main="app" src="lib/require.min.js"></script>
+    ```
+    - data-main informa para carregar o arquivo/modulo post apos leitura completa da lib requireJS (evita erro de pilha de carregamento)
+    - Este bloco é customizado para olhar para pasta lib e usar ```requirejs.config()```
+3. Gerar um caminho path chamado ```app``` para olhar para o caminho ```/js/posts.js```
+4. Precisa gerar o script de arranque do ```requireJS```, no arquivo app.js, na raiz:
+    ```
+    /**
+    *  Configuração de arranque do requirejs
+    */
+    requirejs.config({
+        baseUrl : './lib', // base/raiz de execução e escopo do requirejs
+        paths : {
+            app: '../js' // path customizado para voltar 1 nivel com nome de app olhando para ../js
+        }
+    });
 
-
-
-
+    // inicia o requirejs de fato
+    requirejs(['app/posts'], function(){
+        console.log('requirejs carregou');
+    })
+    
+    ```
+- É necessário usar em modo servidor de prod. simule com lite-serve
 
 
 
